@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Kadar App</string>
+    <string name="dateformat">MM-dd-yy hh-mm-ss</string>
 </resources>
