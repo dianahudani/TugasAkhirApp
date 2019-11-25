@@ -121,7 +121,7 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
                             // for Activity#requestPermissions for more details.
                             return;
                         }
-                        lm.requestLocationUpdates(GPS_PROVIDER, 20000, 10000, this);
+                        lm.requestLocationUpdates(GPS_PROVIDER, 20000, 20, this);
 
                         label1.setVisibility(View.VISIBLE);
                         label2.setVisibility(View.VISIBLE);
