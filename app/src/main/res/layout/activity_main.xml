@@ -31,6 +31,7 @@
             />
 
         <EditText
+            android:id="@+id/username"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
@@ -42,6 +43,7 @@
             android:padding="15dp" />
 
         <EditText
+            android:id="@+id/pass"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
