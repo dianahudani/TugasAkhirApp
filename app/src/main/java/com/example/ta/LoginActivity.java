@@ -10,15 +10,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.ta.ApiHelper.RetrofitClient;
+import com.example.ta.Pojo.User;
+import com.example.ta.Response.LoginResponse;
 import com.example.ta.Session.SessionManager;
-import com.example.ta.apihelper.BaseApiService;
-import com.example.ta.apihelper.UtilsApi;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.ta.ApiHelper.BaseApiService;
 
 import java.io.IOException;
 
@@ -33,7 +31,6 @@ public class LoginActivity extends AppCompatActivity {
     Button login;
     ProgressDialog loading;
     Context mContext;
-    BaseApiService mApiService;
     SessionManager sessionManager;
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -43,8 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         login = findViewById(R.id.loginbtn);
         mContext = this;
-            mApiService = UtilsApi.getAPIService();
-            initComponents();
+        initComponents();
     }
 
     private void initComponents() {
@@ -60,39 +56,40 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void requestLogin() {
-        mApiService.loginRequest(username.getText().toString().trim(), password.getText().toString())
-                .enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if(response.isSuccessful()){
-                            loading.dismiss();
-                            try{
-                                JSONObject jsonRESULTS = new JSONObject(response.body().string());
-                                if(jsonRESULTS.getString("code").equals("200")){
-                                    Toast.makeText(mContext, jsonRESULTS.get("message").toString(), Toast.LENGTH_SHORT).show();
-//                                    sessionManager.setUser(jsonRESULTS);
-                                    Intent goToActivity = new Intent(LoginActivity.this, CameraActivity.class);
-                                    startActivity(goToActivity);
-                                    finish();
-                                } else{
-                                    Toast.makeText(mContext, jsonRESULTS.get("message").toString(), Toast.LENGTH_SHORT).show();
-//                                    finish();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        } else{
-                            loading.dismiss();
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Log.e("debug", "onFailure: ERROR > " + t.toString());
-                        loading.dismiss();
+        BaseApiService apiService = RetrofitClient.getClient().create(BaseApiService.class);
+        Call<LoginResponse> call = apiService.loginRequest(username.getText().toString().trim(), password.getText().toString());
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if(response.isSuccessful()){
+                    loading.dismiss();
+                    try{
+                        if(response.body().getCode().equals(200)){
+                            Toast.makeText(mContext, response.body().getMessage().toString(), Toast.LENGTH_SHORT).show();
+                            Intent goToActivity = new Intent(LoginActivity.this, CameraActivity.class);
+                            startActivity(goToActivity);
+                            finish();
+                        } else{
+                            Toast.makeText(mContext, response.body().getMessage().toString(), Toast.LENGTH_SHORT).show();
+//                                    finish();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                });
+                } else{
+                    loading.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Log.i("FAILED", t.getMessage());
+                final Toast toast = Toast.makeText(getApplicationContext(), "Terjadi Kesalahan :(", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
+
     }
+
 }

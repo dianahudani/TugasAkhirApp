@@ -4,16 +4,19 @@ import com.example.ta.Pojo.User;
 
 public class LoginResponse {
 
-    public Integer getError() {
-        return error;
+    public Integer getCode() {
+        return code;
     }
 
-    public User getMessage() {
+    public User getData() {
+        return data;
+    }
+
+    public String getMessage() {
         return message;
     }
 
-    private Integer error;
-    private User message;
-
+    private Integer code;
+    private User data;
+    private String message;
 }
-

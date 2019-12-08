@@ -1,4 +1,6 @@
-package com.example.ta.apihelper;
+package com.example.ta.ApiHelper;
+
+import com.example.ta.Response.LoginResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -9,7 +11,7 @@ import retrofit2.http.POST;
 public interface BaseApiService {
     @FormUrlEncoded
     @POST("login")
-    Call<ResponseBody> loginRequest(
+    Call<LoginResponse> loginRequest(
             @Field("username") String username,
             @Field("password") String password);
 }
