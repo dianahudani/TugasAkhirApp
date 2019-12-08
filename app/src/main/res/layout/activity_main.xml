@@ -38,7 +38,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginRight="30dp"
             android:background="#ffffff"
-            android:hint="Email"
+            android:hint="Username"
             android:inputType="textEmailAddress"
             android:padding="15dp" />
 

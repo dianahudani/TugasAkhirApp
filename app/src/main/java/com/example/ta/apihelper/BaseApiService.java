@@ -8,8 +8,8 @@ import retrofit2.http.POST;
 
 public interface BaseApiService {
     @FormUrlEncoded
-    @POST("")
-    Call<ResponseBody> loginRequest(@Field("username") String username,
-                                    @Field("password") String password,
-                                    @Field("token") String token;
+    @POST("login")
+    Call<ResponseBody> loginRequest(
+            @Field("username") String username,
+            @Field("password") String password);
 }

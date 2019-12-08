@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.ta.Session.SessionManager;
 import com.example.ta.apihelper.BaseApiService;
 import com.example.ta.apihelper.UtilsApi;
 
@@ -33,6 +34,8 @@ public class LoginActivity extends AppCompatActivity {
     ProgressDialog loading;
     Context mContext;
     BaseApiService mApiService;
+    SessionManager sessionManager;
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +45,9 @@ public class LoginActivity extends AppCompatActivity {
         mContext = this;
             mApiService = UtilsApi.getAPIService();
             initComponents();
-
-
     }
 
-    private void initComponents(EditText editText) {
+    private void initComponents() {
         username = findViewById(R.id.username);
         password = findViewById(R.id.pass);
         login.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void requestLogin() {
-        mApiService.loginRequest(username.getText().toString(), password.getText().toString())
+        mApiService.loginRequest(username.getText().toString().trim(), password.getText().toString())
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -67,15 +68,15 @@ public class LoginActivity extends AppCompatActivity {
                             loading.dismiss();
                             try{
                                 JSONObject jsonRESULTS = new JSONObject(response.body().string());
-                                if(jsonRESULTS.getString("error").equals("false")){
-                                    Toast.makeText(mContext, "BERHASIL LOGIN", Toast.LENGTH_SHORT).show();;
-                                    String nama = jsonRESULTS.getJSONObject("user").getString("nama");
-                                    Intent intent = new Intent(mContext,CameraActivity.class)
-                                    intent.putExtra("result_nama", nama);
-                                    startActivity(intent);
+                                if(jsonRESULTS.getString("code").equals("200")){
+                                    Toast.makeText(mContext, jsonRESULTS.get("message").toString(), Toast.LENGTH_SHORT).show();
+//                                    sessionManager.setUser(jsonRESULTS);
+                                    Intent goToActivity = new Intent(LoginActivity.this, CameraActivity.class);
+                                    startActivity(goToActivity);
+                                    finish();
                                 } else{
-                                    String error_message = jsonRESULTS.getString(("error_msg"));
-                                    Toast.makeText(mContext, error_message, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mContext, jsonRESULTS.get("message").toString(), Toast.LENGTH_SHORT).show();
+//                                    finish();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
