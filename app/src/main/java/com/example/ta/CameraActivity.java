@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -16,10 +19,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +39,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import static android.location.LocationManager.*;
 import static com.example.ta.R.string.dateformat;
@@ -42,9 +50,13 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
     private static final int MY_PERMISSIONS_REQUEST_WRITE = 223;
     Button b1;
     ImageView iv;
-    TextView label1, label2;
-    EditText Longtext, Lattext;
+    TextView label1, label2, label3, spinnerLabel;
+    EditText Longtext, Lattext, Nametext;
     Button geobtn;
+    Spinner spinnerName;
+    Integer id;
+    ImageView foto_lokasi;
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -56,9 +68,16 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
 
         label1 = findViewById(R.id.longitude);
         label2 = findViewById(R.id.lat);
+        label3 = findViewById(R.id.name);
         Longtext = findViewById(R.id.textLong);
         Lattext = findViewById(R.id.textLat);
-        geobtn = findViewById(R.id.geobtn);
+        Nametext = findViewById(R.id.namalokasi);
+        geobtn = findViewById(R.id.lokasibtn);
+        spinnerLabel = findViewById(R.id.spinnerName);
+        spinnerName = (Spinner) findViewById(R.id.spinner);
+
+
+
         b1 = findViewById(R.id.fotobtn);
         iv = findViewById(R.id.imageView);
 
@@ -128,6 +147,10 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
                         Longtext.setVisibility(View.VISIBLE);
                         Lattext.setVisibility(View.VISIBLE);
                         geobtn.setVisibility(View.VISIBLE);
+                        label3.setVisibility(View.VISIBLE);
+                        Nametext.setVisibility(View.VISIBLE);
+                        spinnerName.setVisibility(View.VISIBLE);
+                        spinnerLabel.setVisibility(View.VISIBLE);
 
                         Longtext.setFocusable(false);
                         Longtext.setEnabled(false);
@@ -172,6 +195,11 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
     public void onLocationChanged(Location location) {
         double lngdb = location.getLongitude();
         double latdb = location.getLatitude();
+        try {
+            getAlamat(latdb,lngdb);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Longtext.setText(String.valueOf(lngdb));
         Lattext.setText(String.valueOf(latdb));
     }
@@ -188,6 +216,45 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
 
     @Override
     public void onProviderDisabled(String s) {
+
+    }
+
+    public void getAlamat(Double latitude, Double longitude) throws IOException {
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+        String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+        String city = addresses.get(0).getLocality();
+        String state = addresses.get(0).getAdminArea();
+        String country = addresses.get(0).getCountryName();
+        String postalCode = addresses.get(0).getPostalCode();
+        String knownName = addresses.get(0).getFeatureName();
+
+        Log.i("KECAMATAN", knownName);
+        Nametext.setText(knownName);
+    }
+
+    public void getDataDariUI(){
+        String nama_lokasi_penjualan = Nametext.getText().toString();;
+        Double latitude_lokasi_penjualan = Double.parseDouble(Lattext.getText().toString());
+        Double longitude_lokasi_penjualan = Double.parseDouble(Longtext.getText().toString());
+        String jenis_data = spinnerName.getSelectedItem().toString();
+        if (jenis_data == "Bakso"){
+            id = 1;
+        }else if(jenis_data == "Tahu"){
+            id = 2;
+        }
+        Integer id_jenis_sample = id;
+        foto_lokasi = findViewById(R.id.foto_lokasi);
+        BitmapDrawable drawable = (BitmapDrawable) foto_lokasi.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100,bos);
+        byte[] bb = bos.toByteArray();
+        String foto_lokasi_penjualan = Base64.encodeToString(bb, 0);
 
     }
 }
