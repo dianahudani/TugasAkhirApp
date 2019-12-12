@@ -10,6 +10,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,22 +19,37 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.ta.ApiHelper.BaseApiService;
+import com.example.ta.ApiHelper.RetrofitClient;
+import com.example.ta.Pojo.Lokasi;
+import com.example.ta.Response.LoginResponse;
+import com.example.ta.Response.LokasiResponse;
+import com.example.ta.Session.SessionManager;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private LocationManager lm;
     private LocationManager ll;
+    private GoogleMap mapForMarker;
     EditText txtlong, txtlat;
 
-    FloatingActionButton btn;
+    FloatingActionButton btn, fabReload;
+    SessionManager sessionManager;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -44,16 +60,32 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        sessionManager = new SessionManager(this);
+        getDataDewi();
 
         txtlat = findViewById(R.id.lati);
         txtlong = findViewById(R.id.longi);
         btn = findViewById(R.id.fab1);
+        fabReload = findViewById(R.id.fabReload);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent in = new Intent(MapActivity.this, LoginActivity.class);
-                startActivity(in);
+                if(sessionManager.getUser() != null){
+                    Intent in = new Intent(MapActivity.this, CameraActivity.class);
+                    startActivity(in);
+                }else{
+                    Intent in = new Intent(MapActivity.this, LoginActivity.class);
+                    startActivity(in);
+                }
+            }
+        });
+
+
+        fabReload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MapActivity.this, "Sedang memuat :p", Toast.LENGTH_SHORT).show();
+                getDataDewi();
             }
         });
 
@@ -103,6 +135,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        mapForMarker = googleMap;
         mMap = googleMap;
 
         Criteria criteria = new Criteria();
@@ -123,12 +156,45 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         LatLng myPosition = new LatLng(latitude, longitude);
+        googleMap.addMarker(new MarkerOptions().position(myPosition).title("Your Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
 
-        googleMap.addMarker(new MarkerOptions().position(myPosition).title("Lokasi Anda"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 15));
 
         // Add a marker in Sydney and move the camera
     }
+
+    protected void getDataDewi(){
+        BaseApiService apiService = RetrofitClient.getClient().create(BaseApiService.class);
+        Call<LokasiResponse> call = apiService.getLokasiPenjualan();
+        call.enqueue(new Callback<LokasiResponse>() {
+            @Override
+            public void onResponse(Call<LokasiResponse> call, Response<LokasiResponse> response) {
+                Log.i("DIANA WKWKW", response.body().getData().get(0).getNama_lokasi_penjualan());
+                iterasiDewi(response.body().getData());
+            }
+
+            @Override
+            public void onFailure(Call<LokasiResponse> call, Throwable t) {
+                Log.i("ERRORNYA", t.getMessage());
+            }
+        });
+
+    }
+
+    protected void iterasiDewi(List<Lokasi> lokasiList){
+        mapForMarker.clear();
+        for (int i=0 ; i<lokasiList.size() ; i++){
+            LatLng myPosition = new LatLng(lokasiList.get(i).getLatitude_lokasi_penjualan(), lokasiList.get(i).getLongitude_lokasi_penjualan());
+            mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()));
+
+        }
+
+    }
+
+    protected void putPin(double latitude, double longitude){
+
+    }
+
 
 
 

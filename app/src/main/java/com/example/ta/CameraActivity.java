@@ -55,7 +55,6 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
     Button geobtn;
     Spinner spinnerName;
     Integer id;
-    ImageView foto_lokasi;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -79,7 +78,7 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
 
 
         b1 = findViewById(R.id.fotobtn);
-        iv = findViewById(R.id.imageView);
+        iv = findViewById(R.id.foto_lokasi);
 
         LocationManager mylocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         b1.setOnClickListener(new View.OnClickListener() {
@@ -175,6 +174,7 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
     private void prosesKamera(Intent datanya) throws IOException {
         Bitmap bm;
         bm = (Bitmap) datanya.getExtras().get("data");
+        Log.i("CHECK BITMAT", datanya.getExtras().toString());
         iv.setImageBitmap(bm);
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -237,24 +237,23 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
         Nametext.setText(knownName);
     }
 
-    public void getDataDariUI(){
-        String nama_lokasi_penjualan = Nametext.getText().toString();;
-        Double latitude_lokasi_penjualan = Double.parseDouble(Lattext.getText().toString());
-        Double longitude_lokasi_penjualan = Double.parseDouble(Longtext.getText().toString());
-        String jenis_data = spinnerName.getSelectedItem().toString();
-        if (jenis_data == "Bakso"){
-            id = 1;
-        }else if(jenis_data == "Tahu"){
-            id = 2;
-        }
-        Integer id_jenis_sample = id;
-        foto_lokasi = findViewById(R.id.foto_lokasi);
-        BitmapDrawable drawable = (BitmapDrawable) foto_lokasi.getDrawable();
-        Bitmap bitmap = drawable.getBitmap();
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100,bos);
-        byte[] bb = bos.toByteArray();
-        String foto_lokasi_penjualan = Base64.encodeToString(bb, 0);
-
-    }
+//    public void getDataDariUI(){
+//        String nama_lokasi_penjualan = Nametext.getText().toString();;
+//        Double latitude_lokasi_penjualan = Double.parseDouble(Lattext.getText().toString());
+//        Double longitude_lokasi_penjualan = Double.parseDouble(Longtext.getText().toString());
+//        String jenis_data = spinnerName.getSelectedItem().toString();
+//        if (jenis_data == "Bakso"){
+//            id = 1;
+//        }else if(jenis_data == "Tahu"){
+//            id = 2;
+//        }
+//        Integer id_jenis_sample = id;
+//        foto_lokasi = findViewById(R.id.foto_lokasi);
+//        BitmapDrawable drawable = (BitmapDrawable) foto_lokasi.getDrawable();
+//        Bitmap bitmap = drawable.getBitmap();
+//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.PNG,100,bos);
+//        byte[] bb = bos.toByteArray();
+//        String foto_lokasi_penjualan = Base64.encodeToString(bb, 0);
+//    }
 }

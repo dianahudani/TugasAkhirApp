@@ -40,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         login = findViewById(R.id.loginbtn);
         mContext = this;
+        sessionManager = new SessionManager(this);
         initComponents();
     }
 
@@ -66,6 +67,9 @@ public class LoginActivity extends AppCompatActivity {
                     loading.dismiss();
                     try{
                         if(response.body().getCode().equals(200)){
+
+                            sessionManager.setUser(response.body().getData());
+
                             Toast.makeText(mContext, response.body().getMessage().toString(), Toast.LENGTH_SHORT).show();
                             Intent goToActivity = new Intent(LoginActivity.this, CameraActivity.class);
                             startActivity(goToActivity);
