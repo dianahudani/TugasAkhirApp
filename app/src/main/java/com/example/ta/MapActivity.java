@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.ta.Adapter.MapItemAdapter;
 import com.example.ta.ApiHelper.BaseApiService;
 import com.example.ta.ApiHelper.RetrofitClient;
 import com.example.ta.Pojo.Lokasi;
@@ -51,6 +52,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     FloatingActionButton btn, fabReload;
     SessionManager sessionManager;
+    MapItemAdapter mapItemAdapter;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -194,12 +196,17 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     protected void iterasiDewi(List<Lokasi> lokasiList){
         mapForMarker.clear();
+
         for (int i=0 ; i<lokasiList.size() ; i++){
             LatLng myPosition = new LatLng(lokasiList.get(i).getLatitude_lokasi_penjualan(), lokasiList.get(i).getLongitude_lokasi_penjualan());
             if(Integer.parseInt(lokasiList.get(i).getId_lokasi_penjualan()) > 4){
-                mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                MapItemAdapter mapItemAdapter = new MapItemAdapter(this,lokasiList.get(i));
+                mapForMarker.setInfoWindowAdapter(mapItemAdapter);
             }else{
-                mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                MapItemAdapter mapItemAdapter = new MapItemAdapter(this,lokasiList.get(i));
+                mapForMarker.setInfoWindowAdapter(mapItemAdapter);
 
             }
         }

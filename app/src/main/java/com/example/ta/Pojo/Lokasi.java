@@ -42,6 +42,10 @@ public class Lokasi {
         return updated_at;
     }
 
+    public String status_sample() {
+        return status_sample;
+    }
+
     private String id_lokasi_penjualan;
     private String id_jenis_sample;
     private Double latitude_lokasi_penjualan;
@@ -50,6 +54,7 @@ public class Lokasi {
     private String tanggal_pengambilan_sample;
     private String flag_lokasi_penjualan;
     private String foto_lokasi_penjualan;
+    private String status_sample;
     private String created_at;
     private String updated_at;
 }
