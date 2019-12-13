@@ -31,6 +31,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -67,6 +68,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         txtlong = findViewById(R.id.longi);
         btn = findViewById(R.id.fab1);
         fabReload = findViewById(R.id.fabReload);
+
+        btn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Toast.makeText(MapActivity.this, "Berhasil Logout :3", Toast.LENGTH_SHORT).show();
+                sessionManager.logout();
+                return false;
+            }
+        });
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -185,9 +196,21 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mapForMarker.clear();
         for (int i=0 ; i<lokasiList.size() ; i++){
             LatLng myPosition = new LatLng(lokasiList.get(i).getLatitude_lokasi_penjualan(), lokasiList.get(i).getLongitude_lokasi_penjualan());
-            mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()));
+            if(Integer.parseInt(lokasiList.get(i).getId_lokasi_penjualan()) > 4){
+                mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+            }else{
+                mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
 
+            }
         }
+
+        mapForMarker.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Log.i("TEST MARKER", marker.getTitle().toString());
+                return false;
+            }
+        });
 
     }
 

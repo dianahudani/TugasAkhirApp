@@ -2,6 +2,7 @@ package com.example.ta;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,6 +33,12 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.ta.ApiHelper.BaseApiService;
+import com.example.ta.ApiHelper.RetrofitClient;
+import com.example.ta.Response.LoginResponse;
+import com.example.ta.Response.StoreResponse;
+import com.example.ta.Session.SessionManager;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -41,6 +48,10 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.location.LocationManager.*;
 import static com.example.ta.R.string.dateformat;
@@ -55,6 +66,7 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
     Button geobtn;
     Spinner spinnerName;
     Integer id;
+    ProgressDialog dialog;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -74,7 +86,6 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
         geobtn = findViewById(R.id.lokasibtn);
         spinnerLabel = findViewById(R.id.spinnerName);
         spinnerName = (Spinner) findViewById(R.id.spinner);
-
 
 
         b1 = findViewById(R.id.fotobtn);
@@ -101,10 +112,11 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
         geobtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(CameraActivity.this, GeoActivity.class);
-                i.putExtra("lat", Lattext.getText().toString());
-                i.putExtra("long", Longtext.getText().toString());
-                startActivity(i);
+                getFromUi();
+//                Intent i = new Intent(CameraActivity.this, GeoActivity.class);
+//                i.putExtra("lat", Lattext.getText().toString());
+//                i.putExtra("long", Longtext.getText().toString());
+//                startActivity(i);
             }
         });
     }
@@ -127,6 +139,10 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
             switch (requestCode) {
                 case (kodekamera):
                     try {
+                        dialog = new ProgressDialog(CameraActivity.this);
+                        dialog.setMessage("Loading..");
+                        dialog.show();
+
                         prosesKamera(data);
                         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -202,6 +218,7 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
         }
         Longtext.setText(String.valueOf(lngdb));
         Lattext.setText(String.valueOf(latdb));
+        dialog.dismiss();
     }
 
     @Override
@@ -220,6 +237,7 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
     }
 
     public void getAlamat(Double latitude, Double longitude) throws IOException {
+
         Geocoder geocoder;
         List<Address> addresses;
         geocoder = new Geocoder(this, Locale.getDefault());
@@ -237,23 +255,71 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
         Nametext.setText(knownName);
     }
 
-//    public void getDataDariUI(){
-//        String nama_lokasi_penjualan = Nametext.getText().toString();;
-//        Double latitude_lokasi_penjualan = Double.parseDouble(Lattext.getText().toString());
-//        Double longitude_lokasi_penjualan = Double.parseDouble(Longtext.getText().toString());
-//        String jenis_data = spinnerName.getSelectedItem().toString();
-//        if (jenis_data == "Bakso"){
-//            id = 1;
-//        }else if(jenis_data == "Tahu"){
-//            id = 2;
-//        }
-//        Integer id_jenis_sample = id;
-//        foto_lokasi = findViewById(R.id.foto_lokasi);
-//        BitmapDrawable drawable = (BitmapDrawable) foto_lokasi.getDrawable();
-//        Bitmap bitmap = drawable.getBitmap();
-//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.PNG,100,bos);
-//        byte[] bb = bos.toByteArray();
-//        String foto_lokasi_penjualan = Base64.encodeToString(bb, 0);
-//    }
+    protected void getFromUi(){
+        Double lat;
+        Double lng;
+        Integer jenis = 0;
+        String namaData;
+        String base64;
+
+        lat = Double.valueOf(Lattext.getText().toString());
+        lng = Double.valueOf(Longtext.getText().toString());
+
+        if(spinnerName.getSelectedItem().toString().equals("Bakso")){
+            jenis = 1;
+        }else if(spinnerName.getSelectedItem().toString().equals("Tahu")){
+            jenis = 2;
+        }else{
+            Log.i("SPINNER SELECTED",spinnerName.getSelectedItem().toString());
+        }
+
+        namaData = Nametext.getText().toString();
+        base64 = convertToBase64();
+//
+//        Log.i("DATA","================");
+//        Log.i("DATA",lat.toString());
+//        Log.i("DATA",lng.toString());
+//        Log.i("DATA",jenis.toString());
+//        Log.i("DATA",namaData);
+//        Log.i("DATA",base64);
+//        Log.i("DATA","================");
+
+        kirimKeDewi(lat,lng,jenis,namaData,base64);
+
+    }
+
+    protected void kirimKeDewi(Double lat,Double lng,Integer jenis,String namaData,String base64){
+        Log.i("KIRIM KE DEWI","TEEST");
+        SessionManager sessionManager = new SessionManager(this);
+        BaseApiService apiService = RetrofitClient.getClient().create(BaseApiService.class);
+        Call<StoreResponse> call = apiService.sampleRequest(jenis,lat,lng,namaData,base64,sessionManager.getUser().getRemember_token());
+        call.enqueue(new Callback<StoreResponse>() {
+            @Override
+            public void onResponse(Call<StoreResponse> call, Response<StoreResponse> response) {
+                Log.i("STATUS POST", response.body().getCode().toString());
+                Toast.makeText(CameraActivity.this, response.body().getMessage().toString(), Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<StoreResponse> call, Throwable t) {
+                Log.i("STATUS POST", t.getMessage());
+                Toast.makeText(CameraActivity.this, t.getMessage().toString(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+    protected String convertToBase64(){
+        iv.buildDrawingCache();
+        Bitmap bitmap = iv.getDrawingCache();
+        String img_str;
+        ByteArrayOutputStream stream=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
+        byte[] image=stream.toByteArray();
+        System.out.println("byte array:"+image);
+
+        return img_str = "data:image/jpeg;base64,/9j/" + Base64.encodeToString(image, 0);
+//        System.out.println("string:"+img_str);
+    }
 }

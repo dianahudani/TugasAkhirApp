@@ -49,6 +49,7 @@
         android:padding="20dp"
         android:gravity="center"
         app:context=".MainActivity">
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab1"
             android:layout_width="wrap_content"
@@ -57,7 +58,8 @@
             android:layout_margin="20dp"
             android:background="@drawable/roundedfloat"
             android:backgroundTint="#e7b901"
-            android:src="@drawable/ic_done_black_24dp"
+            android:src="@drawable/ic_add_black_24dp"
+            android:tint="@android:color/white"
             app2:borderWidth="0dp"
             app2:elevation="6dp"
             app2:fabSize="normal" />
