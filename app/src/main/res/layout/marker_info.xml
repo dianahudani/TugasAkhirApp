@@ -28,7 +28,7 @@
                 android:id="@+id/infoDataset"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
+                android:paddingLeft="8dp"
                 android:text="Tahu Jelek"
                 android:textStyle="bold" />
 
@@ -36,7 +36,7 @@
                 android:id="@+id/infoAlamat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
+                android:paddingLeft="8dp"
                 android:text="Jl. Diana WKWKW"
                 android:textStyle="bold" />
 
@@ -44,7 +44,8 @@
                 android:id="@+id/infoStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
+                android:paddingLeft="8dp"
+                android:paddingBottom="8dp"
                 android:text="Single"
                 android:textStyle="bold" />
         </LinearLayout>

@@ -20,6 +20,7 @@
         android:layout_height="match_parent">
 
         <EditText
+            android:id="@+id/searchBox"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="30dp"
@@ -28,6 +29,16 @@
             android:background="#ffffff"
             android:hint="Search..."
             android:padding="15dp" />
+
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:entries="@array/jenis_arr"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp"/>
 
         <EditText
             android:id="@+id/longi"
