@@ -182,7 +182,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         call.enqueue(new Callback<LokasiResponse>() {
             @Override
             public void onResponse(Call<LokasiResponse> call, Response<LokasiResponse> response) {
-                Log.i("DIANA WKWKW", response.body().getData().get(0).getNama_lokasi_penjualan());
                 iterasiDewi(response.body().getData());
             }
 
@@ -209,6 +208,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 mapForMarker.setInfoWindowAdapter(mapItemAdapter);
 
             }
+
+
         }
 
         mapForMarker.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -218,10 +219,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 return false;
             }
         });
-
-    }
-
-    protected void putPin(double latitude, double longitude){
 
     }
 
