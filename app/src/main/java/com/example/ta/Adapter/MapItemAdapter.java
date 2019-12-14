@@ -47,6 +47,7 @@ public class MapItemAdapter implements GoogleMap.InfoWindowAdapter {
     public View getInfoContents(Marker marker) {
         View view = context.getLayoutInflater().inflate(R.layout.marker_info, null);
 
+        Lokasi mLokasi = (Lokasi) marker.getTag();
         infoAlamat = view.findViewById(R.id.infoAlamat);
         infoStatus = view.findViewById(R.id.infoStatus);
         infoNamaData = view.findViewById(R.id.infoDataset);
@@ -59,12 +60,12 @@ public class MapItemAdapter implements GoogleMap.InfoWindowAdapter {
             Log.i("ERROR", e.getMessage());
         }
 
-        getAlamat(lokasi.getLatitude_lokasi_penjualan(), lokasi.getLongitude_lokasi_penjualan());
+        getAlamat(mLokasi.getLatitude_lokasi_penjualan(), mLokasi.getLongitude_lokasi_penjualan());
 
-        if(lokasi.getId_jenis_sample().equals("1")){
+        if(mLokasi.getId_jenis_sample().equals("1")){
             infoStatus.setText("Bakso");
         }
-        else if(lokasi.getId_jenis_sample().equals("2")){
+        else if(mLokasi.getId_jenis_sample().equals("2")){
             infoStatus.setText("Tahu");
         }
 

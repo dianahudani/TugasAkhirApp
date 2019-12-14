@@ -200,10 +200,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             LatLng myPosition = new LatLng(lokasiList.get(i).getLatitude_lokasi_penjualan(), lokasiList.get(i).getLongitude_lokasi_penjualan());
             if(Integer.parseInt(lokasiList.get(i).getId_lokasi_penjualan()) > 4){
                 Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                newMarker.setTag(lokasiList.get(i));
                 MapItemAdapter mapItemAdapter = new MapItemAdapter(this,lokasiList.get(i));
                 mapForMarker.setInfoWindowAdapter(mapItemAdapter);
             }else{
                 Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                newMarker.setTag(lokasiList.get(i));
                 MapItemAdapter mapItemAdapter = new MapItemAdapter(this,lokasiList.get(i));
                 mapForMarker.setInfoWindowAdapter(mapItemAdapter);
 
