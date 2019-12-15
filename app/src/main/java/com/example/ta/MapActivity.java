@@ -169,7 +169,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         LatLng myPosition = new LatLng(latitude, longitude);
-        googleMap.addMarker(new MarkerOptions().position(myPosition).title("Your Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 15));
 

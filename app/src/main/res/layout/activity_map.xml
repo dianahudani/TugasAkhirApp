@@ -19,6 +19,19 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
 
+        <Spinner
+            android:id="@+id/spinner"
+            android:entries="@array/jenis_arr"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#ffffff"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:padding="10dp"/>
+
         <EditText
             android:id="@+id/searchBox"
             android:layout_width="match_parent"
@@ -30,15 +43,6 @@
             android:hint="Search..."
             android:padding="15dp" />
 
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:entries="@array/jenis_arr"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
-            android:padding="10dp"/>
 
         <EditText
             android:id="@+id/longi"
