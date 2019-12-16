@@ -12,7 +12,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +55,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     FloatingActionButton btn, fabReload;
     SessionManager sessionManager;
     MapItemAdapter mapItemAdapter;
+    Spinner tipeData;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -70,6 +73,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         txtlong = findViewById(R.id.longi);
         btn = findViewById(R.id.fab1);
         fabReload = findViewById(R.id.fabReload);
+        tipeData = findViewById(R.id.spinner);
 
         btn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -99,6 +103,18 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             public void onClick(View view) {
                 Toast.makeText(MapActivity.this, "Sedang memuat :p", Toast.LENGTH_SHORT).show();
                 getDataDewi();
+            }
+        });
+
+        tipeData.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                getDataDewi();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
 
@@ -181,7 +197,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         call.enqueue(new Callback<LokasiResponse>() {
             @Override
             public void onResponse(Call<LokasiResponse> call, Response<LokasiResponse> response) {
-                iterasiDewi(response.body().getData());
+                iterasiList(response.body().getData());
             }
 
             @Override
@@ -192,21 +208,27 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     }
 
-    protected void iterasiDewi(List<Lokasi> lokasiList){
+    protected void iterasiList(List<Lokasi> lokasiList){
         mapForMarker.clear();
+        tipeData = findViewById(R.id.spinner);
+
 
         for (int i=0 ; i<lokasiList.size() ; i++){
             LatLng myPosition = new LatLng(lokasiList.get(i).getLatitude_lokasi_penjualan(), lokasiList.get(i).getLongitude_lokasi_penjualan());
-            if(Integer.parseInt(lokasiList.get(i).getId_lokasi_penjualan()) > 4){
-                Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-                newMarker.setTag(lokasiList.get(i));
-                MapItemAdapter mapItemAdapter = new MapItemAdapter(this,lokasiList.get(i));
-                mapForMarker.setInfoWindowAdapter(mapItemAdapter);
-            }else{
-                Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-                newMarker.setTag(lokasiList.get(i));
-                MapItemAdapter mapItemAdapter = new MapItemAdapter(this,lokasiList.get(i));
-                mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+            if(tipeData.getSelectedItem().toString().equals("Bakso")){
+                if(lokasiList.get(i).getId_jenis_sample().equals("1")) {
+                    Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                    newMarker.setTag(lokasiList.get(i));
+                    MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                    mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                }
+            }else if(tipeData.getSelectedItem().toString().equals("Tahu")) {
+                if (lokasiList.get(i).getId_jenis_sample().equals("2")) {
+                    Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                    newMarker.setTag(lokasiList.get(i));
+                    MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                    mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                }
 
             }
 
