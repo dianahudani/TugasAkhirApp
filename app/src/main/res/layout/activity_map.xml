@@ -66,20 +66,6 @@
         app:context=".MainActivity">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="20dp"
-            android:background="@drawable/roundedfloat"
-            android:backgroundTint="#e7b901"
-            android:src="@drawable/ic_add_black_24dp"
-            android:tint="@android:color/white"
-            app2:borderWidth="0dp"
-            app2:elevation="6dp"
-            app2:fabSize="normal" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabReload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -92,4 +78,5 @@
             app2:elevation="6dp"
             app2:fabSize="normal" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <include layout="@layout/content_fab" />
 </FrameLayout>

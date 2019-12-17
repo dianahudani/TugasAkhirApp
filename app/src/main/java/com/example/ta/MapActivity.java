@@ -12,6 +12,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -52,10 +54,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private GoogleMap mapForMarker;
     EditText txtlong, txtlat;
 
-    FloatingActionButton btn, fabReload;
+    private FloatingActionButton fab_main, loginFab, recFab;
+    private Animation fab_open, fab_close, fab_clock, fab_anticlock;
     SessionManager sessionManager;
     MapItemAdapter mapItemAdapter;
     Spinner tipeData;
+
+    Boolean isOpen = false;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -69,13 +74,49 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         sessionManager = new SessionManager(this);
         getDataDewi();
 
+        fab_main = findViewById(R.id.fabMain);
+        recFab = findViewById(R.id.recFab);
+        loginFab = findViewById(R.id.loginFab);
+        fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
+        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
+        fab_anticlock = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_anticlock);
+        fab_clock = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_rotate_clock);
+        final TextView loginText = findViewById(R.id.login_text);
+        final TextView recText = findViewById(R.id.rec_text);
+
         txtlat = findViewById(R.id.lati);
         txtlong = findViewById(R.id.longi);
-        btn = findViewById(R.id.fab1);
-        fabReload = findViewById(R.id.fabReload);
+//        btn = findViewById(R.id.fab1);
+//        fabReload = findViewById(R.id.fabReload);
         tipeData = findViewById(R.id.spinner);
 
-        btn.setOnLongClickListener(new View.OnLongClickListener() {
+        fab_main.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isOpen) {
+
+                    loginText.setVisibility(View.INVISIBLE);
+                    recText.setVisibility(View.INVISIBLE);
+                    loginFab.startAnimation(fab_close);
+                    recFab.startAnimation(fab_close);
+                    fab_main.startAnimation(fab_anticlock);
+                    recFab.setClickable(false);
+                    loginFab.setClickable(false);
+                    isOpen = false;
+                } else {
+                    recText.setVisibility(View.VISIBLE);
+                    loginText.setVisibility(View.VISIBLE);
+                    recFab.startAnimation(fab_open);
+                    loginFab.startAnimation(fab_open);
+                    fab_main.startAnimation(fab_clock);
+                    loginFab.setClickable(true);
+                    recFab.setClickable(true);
+                    isOpen = true;
+                }
+            }
+        });
+
+        fab_main.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 Toast.makeText(MapActivity.this, "Berhasil Logout :3", Toast.LENGTH_SHORT).show();
@@ -84,7 +125,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             }
         });
 
-        btn.setOnClickListener(new View.OnClickListener() {
+        loginFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(sessionManager.getUser() != null){
@@ -97,14 +138,34 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             }
         });
 
-
-        fabReload.setOnClickListener(new View.OnClickListener() {
+        recFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MapActivity.this, "Sedang memuat :p", Toast.LENGTH_SHORT).show();
-                getDataDewi();
+                Toast.makeText(MapActivity.this, "TEST REKOMENDASI", Toast.LENGTH_SHORT).show();
             }
         });
+
+//        btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(sessionManager.getUser() != null){
+//                    Intent in = new Intent(MapActivity.this, CameraActivity.class);
+//                    startActivity(in);
+//                }else{
+//                    Intent in = new Intent(MapActivity.this, LoginActivity.class);
+//                    startActivity(in);
+//                }
+//            }
+//        });
+//
+//
+//        fabReload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(MapActivity.this, "Sedang memuat :p", Toast.LENGTH_SHORT).show();
+//                getDataDewi();
+//            }
+//        });
 
         tipeData.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -120,6 +181,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
 
     }
+
+
 
     private class locListener implements LocationListener {
 
