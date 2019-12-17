@@ -55,7 +55,8 @@ public class MapItemAdapter implements GoogleMap.InfoWindowAdapter {
         infoNamaData.setText(marker.getTitle());
         //infoNamaData.setText(lokasi.getNama_lokasi_penjualan());
         try {
-            Picasso.get().load("https://i.imgur.com/DvpvklR.png").into(infoImage);
+            Picasso.get().load(mLokasi.getFoto_lokasi_penjualan()).into(infoImage);
+            Log.i("URL: ", mLokasi.getFoto_lokasi_penjualan());
         }catch (Exception e){
             Log.i("ERROR", e.getMessage());
         }
