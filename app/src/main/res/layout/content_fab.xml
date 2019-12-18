@@ -14,7 +14,7 @@
         android:layout_marginEnd="88dp"
         android:background="#ffffff"
         android:padding="8dp"
-        android:text="Beri Rekomendasi"
+        android:text="Tambahkan Laporan"
         android:textColor="#013183"
         android:visibility="invisible"
         android:layout_alignParentRight="true"
