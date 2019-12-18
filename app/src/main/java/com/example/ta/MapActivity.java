@@ -54,8 +54,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private GoogleMap mapForMarker;
     EditText txtlong, txtlat;
 
-    private FloatingActionButton fab_main, loginFab, recFab;
+    private FloatingActionButton fab_main, loginFab, recFab, fabReload;
     private Animation fab_open, fab_close, fab_clock, fab_anticlock;
+//        btn = findViewById(R.id.fab1);
     SessionManager sessionManager;
     MapItemAdapter mapItemAdapter;
     Spinner tipeData;
@@ -86,9 +87,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         txtlat = findViewById(R.id.lati);
         txtlong = findViewById(R.id.longi);
-//        btn = findViewById(R.id.fab1);
-//        fabReload = findViewById(R.id.fabReload);
         tipeData = findViewById(R.id.spinner);
+        fabReload = findViewById(R.id.fabReload);
 
         fab_main.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,7 +141,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         recFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MapActivity.this, "TEST REKOMENDASI", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(MapActivity.this, LaporanActivity.class);
+                startActivity(i);
             }
         });
 
@@ -159,13 +160,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 //        });
 //
 //
-//        fabReload.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(MapActivity.this, "Sedang memuat :p", Toast.LENGTH_SHORT).show();
-//                getDataDewi();
-//            }
-//        });
+        fabReload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MapActivity.this, "Sedang memuat :p", Toast.LENGTH_SHORT).show();
+                getDataDewi();
+            }
+        });
 
         tipeData.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -245,6 +246,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         }
         assert provider != null;
         Location location = locationManager.getLastKnownLocation(provider);
+        assert location != null;
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         LatLng myPosition = new LatLng(latitude, longitude);
