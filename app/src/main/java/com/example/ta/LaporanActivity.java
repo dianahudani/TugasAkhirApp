@@ -4,6 +4,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -12,10 +14,18 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.ta.ApiHelper.BaseApiService;
+import com.example.ta.ApiHelper.RetrofitClient;
+import com.example.ta.Pojo.Laporan;
+import com.example.ta.Response.LaporanResponse;
+import com.example.ta.Response.StoreResponse;
+import com.example.ta.Session.SessionManager;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,13 +33,20 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class LaporanActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     Button laporbtn;
-    EditText namaPelapor, jenisLaporan;
+    EditText namaPelapor;
+    Spinner jenisLaporan;
     Double markerLat, markerLong;
 
+
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +54,16 @@ public class LaporanActivity extends FragmentActivity implements OnMapReadyCallb
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        namaPelapor = findViewById(R.id.textNama);
+        jenisLaporan = findViewById(R.id.jenisLaporan);
+        laporbtn = findViewById(R.id.laporbtn);
 
+        laporbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getFromUI();
+            }
+        });
     }
 
 
@@ -85,5 +111,44 @@ public class LaporanActivity extends FragmentActivity implements OnMapReadyCallb
         });
     }
 
+    protected void getFromUI() {
+        Double tvLat, tvLong;
+        String namaLapor, jenisIDLapor;
+        namaLapor = namaPelapor.getText().toString().trim();
+        jenisIDLapor = jenisLaporan.getSelectedItem().toString().trim();
+        tvLat = markerLat;
+        tvLong = markerLong;
 
+        sendToAPI(namaLapor, tvLat, tvLong, jenisIDLapor);
+    }
+
+    protected void sendToAPI(final String namaLapor, Double tvLat, Double tvLong, String jenisIDLapor) {
+        BaseApiService apiService = RetrofitClient.getClient().create(BaseApiService.class);
+        Call<LaporanResponse> call = apiService.laporanRequest(namaLapor, tvLat, tvLong, jenisIDLapor);
+        call.enqueue(new Callback<LaporanResponse>() {
+            @Override
+            public void onResponse(Call<LaporanResponse> call, Response<LaporanResponse> response) {
+//                Toast.makeText(LaporanActivity.this, "BERHASIL", Toast.LENGTH_SHORT).show();
+
+//                Toast.makeText(LaporanActivity.this, response.body().getCode() , Toast.LENGTH_SHORT).show();
+//                Intent i = new Intent(LaporanActivity.this, MapActivity.class);
+//                startActivity(i);
+                Log.i("BENER", String.valueOf(response.body().getMessage()));
+                if(response.body().getCode().equals(400)){
+                    Toast.makeText(LaporanActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                }else if(response.body().getCode().equals(200)){
+                    Toast.makeText(LaporanActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    LaporanActivity.this.finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LaporanResponse> call, Throwable t) {
+//                Toast.makeText(LaporanActivity.this, "GAGAL", Toast.LENGTH_SHORT).show();
+                Log.i("GAGAL", t.getMessage().toString());
+            }
+        });
+
+
+    }
 }

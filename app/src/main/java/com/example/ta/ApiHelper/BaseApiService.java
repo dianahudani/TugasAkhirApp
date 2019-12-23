@@ -1,5 +1,6 @@
 package com.example.ta.ApiHelper;
 
+import com.example.ta.Response.LaporanResponse;
 import com.example.ta.Response.LoginResponse;
 import com.example.ta.Response.LokasiResponse;
 import com.example.ta.Response.StoreResponse;
@@ -30,6 +31,14 @@ public interface BaseApiService {
 
     @GET("lokasi-penjualan/get")
     Call<LokasiResponse> getLokasiPenjualan();
+
+    @FormUrlEncoded
+    @POST("laporan/store")
+    Call<LaporanResponse> laporanRequest(
+            @Field("nama_pelapor") String nama_pelapor,
+            @Field("latitude_lokasi_penjualan") Double latitude_lokasi_penjualan,
+            @Field("longitude_lokasi_penjualan") Double longitude_lokasi_penjualan,
+            @Field("isi_laporan") String isi_laporan);
 
 }
 
