@@ -3,6 +3,7 @@
     <string name="dateformat">MM-dd-yy hh-mm-ss</string>
 
     <string-array name="jenis_arr">
+        <item>Semua Jenis Sampel</item>
         <item>Tahu</item>
         <item>Bakso</item>
     </string-array>
@@ -10,7 +11,7 @@
     <string-array name="jenis_laporan">
         <item>Cek Penjualan Bakso/Tahu Lokasi Ini</item>
         <item>Lokasi Ini Sudah Tutup</item>
-        <item>Update Data Lokasi Ini</item>
+        <item>Perbarui Data Lokasi Ini</item>
     </string-array>
 
 </resources>

@@ -5,19 +5,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ta.ApiHelper.BaseApiService;
@@ -33,6 +41,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,10 +52,9 @@ public class LaporanActivity extends FragmentActivity implements OnMapReadyCallb
 
     private GoogleMap mMap;
     Button laporbtn;
-    EditText namaPelapor;
+    EditText namaPelapor, search;
     Spinner jenisLaporan;
     Double markerLat, markerLong;
-
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -56,7 +66,25 @@ public class LaporanActivity extends FragmentActivity implements OnMapReadyCallb
         mapFragment.getMapAsync(this);
         namaPelapor = findViewById(R.id.textNama);
         jenisLaporan = findViewById(R.id.jenisLaporan);
+        search = findViewById(R.id.searchBox);
         laporbtn = findViewById(R.id.laporbtn);
+
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+
+        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    search.clearFocus();
+                    InputMethodManager in = (InputMethodManager)LaporanActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    in.hideSoftInputFromWindow(search.getWindowToken(), 0);
+                    String newLoc = search.getText().toString();
+                    performSearch();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         laporbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +94,26 @@ public class LaporanActivity extends FragmentActivity implements OnMapReadyCallb
         });
     }
 
+    private void performSearch() {
+        search = findViewById(R.id.searchBox);
+        Geocoder g = new Geocoder(getBaseContext());
+        try {
+            List<Address> daftar = g.getFromLocationName(search.getText().toString(),1);
+            Address alamat = daftar.get(0);
+            String namaAlamat = alamat.getAddressLine(0);
+            Double getLong = alamat.getLongitude();
+            Double getLat = alamat.getLatitude();
+            Toast.makeText(this,"Move to "+ namaAlamat +" Lat:" + getLat + " Long:" +getLong,Toast.LENGTH_LONG).show();
+            gotoPeta(getLong,getLat,15);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private void gotoPeta(Double getLong, Double getLat, int zoom) {
+        LatLng searchLocation = new LatLng(getLat, getLong);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchLocation,zoom));
+    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -110,6 +157,8 @@ public class LaporanActivity extends FragmentActivity implements OnMapReadyCallb
             }
         });
     }
+
+
 
     protected void getFromUI() {
         Double tvLat, tvLong;

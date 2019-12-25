@@ -4,16 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -40,6 +45,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -52,7 +58,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private LocationManager lm;
     private LocationManager ll;
     private GoogleMap mapForMarker;
-    EditText txtlong, txtlat;
+    EditText txtlong, txtlat, search;
 
     private FloatingActionButton fab_main, loginFab, recFab, fabReload;
     private Animation fab_open, fab_close, fab_clock, fab_anticlock;
@@ -73,7 +79,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         sessionManager = new SessionManager(this);
-        getDataDewi();
+        getDataLokasi();
 
         fab_main = findViewById(R.id.fabMain);
         recFab = findViewById(R.id.recFab);
@@ -82,6 +88,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_anticlock = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_anticlock);
         fab_clock = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_rotate_clock);
+        search = findViewById(R.id.searchBox);
         final TextView loginText = findViewById(R.id.login_text);
         final TextView recText = findViewById(R.id.rec_text);
 
@@ -113,6 +120,21 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     recFab.setClickable(true);
                     isOpen = true;
                 }
+            }
+        });
+
+        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    search.clearFocus();
+                    InputMethodManager in = (InputMethodManager)MapActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    in.hideSoftInputFromWindow(search.getWindowToken(), 0);
+                    String newLoc = search.getText().toString();
+                    performSearch();
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -164,14 +186,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             @Override
             public void onClick(View view) {
                 Toast.makeText(MapActivity.this, "Sedang memuat :p", Toast.LENGTH_SHORT).show();
-                getDataDewi();
+                getDataLokasi();
             }
         });
 
         tipeData.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                getDataDewi();
+                getDataLokasi();
             }
 
             @Override
@@ -183,48 +205,29 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     }
 
-
-
-    private class locListener implements LocationListener {
-
-        @Override
-        public void onLocationChanged(Location location) {
-            Double lat = location.getLatitude();
-            Double lng = location.getLongitude();
-            txtlat.setText(String.valueOf(lat));
-            txtlong.setText(String.valueOf(lng));
-
-            Toast.makeText(getBaseContext(), "Lat: " + lat + ", Long: " + lng,
-                    Toast.LENGTH_LONG).show();
-
+    private void performSearch(){
+        search = findViewById(R.id.searchBox);
+        Geocoder g = new Geocoder(getBaseContext());
+        try {
+            List<android.location.Address> daftar = g.getFromLocationName(search.getText().toString(),1);
+            Address alamat = daftar.get(0);
+            String namaAlamat = alamat.getAddressLine(0);
+            Double getLong = alamat.getLongitude();
+            Double getLat = alamat.getLatitude();
+            Toast.makeText(this,"Move to "+ namaAlamat +" Lat:" + getLat + " Long:" +getLong,Toast.LENGTH_LONG).show();
+            gotoPeta(getLong,getLat,15);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String s) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String s) {
-
-        }
     }
 
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+    private void gotoPeta(Double getLong, Double getLat, int zoom) {
+        LatLng searchLocation = new LatLng(getLat, getLong);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchLocation,zoom));
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -256,7 +259,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         // Add a marker in Sydney and move the camera
     }
 
-    protected void getDataDewi(){
+    protected void getDataLokasi(){
         BaseApiService apiService = RetrofitClient.getClient().create(BaseApiService.class);
         Call<LokasiResponse> call = apiService.getLokasiPenjualan();
         call.enqueue(new Callback<LokasiResponse>() {
@@ -280,14 +283,21 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         for (int i=0 ; i<lokasiList.size() ; i++){
             LatLng myPosition = new LatLng(lokasiList.get(i).getLatitude_lokasi_penjualan(), lokasiList.get(i).getLongitude_lokasi_penjualan());
-            if(tipeData.getSelectedItem().toString().equals("Bakso")){
-                if(lokasiList.get(i).getId_jenis_sample().equals("1")) {
+            if(tipeData.getSelectedItem().toString().equals("Bakso")) {
+                if (lokasiList.get(i).getId_jenis_sample().equals("1")) {
                     Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
                     newMarker.setTag(lokasiList.get(i));
                     MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
                     mapForMarker.setInfoWindowAdapter(mapItemAdapter);
                 }
-            }else if(tipeData.getSelectedItem().toString().equals("Tahu")) {
+            }
+            else if(tipeData.getSelectedItem().toString().equals("Semua Jenis Sampel")){
+                    Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                    newMarker.setTag(lokasiList.get(i));
+                    MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                    mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+            }
+            else if(tipeData.getSelectedItem().toString().equals("Tahu")) {
                 if (lokasiList.get(i).getId_jenis_sample().equals("2")) {
                     Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
                     newMarker.setTag(lokasiList.get(i));
@@ -309,6 +319,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         });
 
     }
+
 
 
 

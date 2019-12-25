@@ -284,11 +284,11 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
 //        Log.i("DATA",base64);
 //        Log.i("DATA","================");
 
-        kirimKeDewi(lat,lng,jenis,namaData,base64);
+        kirimKeDB(lat,lng,jenis,namaData,base64);
 
     }
 
-    protected void kirimKeDewi(Double lat,Double lng,Integer jenis,String namaData,String base64){
+    protected void kirimKeDB(Double lat,Double lng,Integer jenis,String namaData,String base64){
         Log.i("KIRIM KE DEWI","TEEST");
         SessionManager sessionManager = new SessionManager(this);
         BaseApiService apiService = RetrofitClient.getClient().create(BaseApiService.class);

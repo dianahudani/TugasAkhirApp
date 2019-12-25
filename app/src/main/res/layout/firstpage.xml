@@ -14,11 +14,11 @@
 
     <Button
         android:id="@+id/nextBtn"
-        android:layout_marginTop="-230dp"
-        android:layout_width="110dp"
+        android:layout_marginTop="-250dp"
+        android:layout_width="130dp"
         android:layout_height="45dp"
         android:layout_gravity="center"
-        android:background="#e7b901"
+        android:background="@drawable/roundedbtn"
         android:text="START"
         android:textStyle="bold"
         android:textColor="#ffffff"

@@ -14,7 +14,6 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".LaporanActivity"></activity>
         <activity android:name=".ViewActivity" />
-        <activity android:name=".GeoActivity" />
         <activity android:name=".MapActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".CameraActivity" />
