@@ -30,7 +30,7 @@ public class MapItemAdapter implements GoogleMap.InfoWindowAdapter {
     private Activity context;
     Lokasi lokasi;
 
-    TextView infoAlamat, infoStatus, infoNamaData;
+    TextView infoAlamat, infoStatus, infoNamaData, infoScore, infoRank;
     ImageView infoImage;
 
     public MapItemAdapter(Activity context, Lokasi lokasi){
@@ -53,6 +53,8 @@ public class MapItemAdapter implements GoogleMap.InfoWindowAdapter {
         infoNamaData = view.findViewById(R.id.infoDataset);
         infoImage = view.findViewById(R.id.infoImage);
         infoNamaData.setText(marker.getTitle());
+        infoRank = view.findViewById(R.id.infoRank);
+        infoScore = view.findViewById(R.id.infoScore);
         //infoNamaData.setText(lokasi.getNama_lokasi_penjualan());
         try {
             Picasso.get().load(mLokasi.getFoto_lokasi_penjualan()).into(infoImage);
@@ -63,12 +65,9 @@ public class MapItemAdapter implements GoogleMap.InfoWindowAdapter {
 
         getAlamat(mLokasi.getLatitude_lokasi_penjualan(), mLokasi.getLongitude_lokasi_penjualan());
 
-        if(mLokasi.getId_jenis_sample().equals("1")){
-            infoStatus.setText("Bakso");
-        }
-        else if(mLokasi.getId_jenis_sample().equals("2")){
-            infoStatus.setText("Tahu");
-        }
+        infoStatus.setText(mLokasi.getStatus_klasifikasi());
+        infoRank.setText("Rank: " + mLokasi.getRank_klasifikasi());
+        infoScore.setText("Score: " + mLokasi.getScore_klasifikasi());
 
         Log.i("STATUS LATITUDE:", infoStatus.getText().toString());
         return view;

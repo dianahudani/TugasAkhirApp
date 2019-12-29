@@ -11,7 +11,9 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#013183"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,25 +26,25 @@
                 android:layout_width="300dp"
                 android:layout_height="300dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="50dp"
-                android:gravity="center"
-                app:srcCompat="@drawable/ic_file_upload_black_24dp"
+                android:layout_marginTop="30dp"
+                app:srcCompat="@drawable/upload_white"
                 tools:ignore="VectorDrawableCompat" />
 
             <Button
                 android:id="@+id/fotobtn"
 
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_width="180dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:background="#e7b901"
+                android:background="@drawable/roundedbtn"
                 android:text="Ambil Foto"
-                android:textColor="#ffffff"
+                android:textColor="#000000"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/spinnerName"
+                android:textColor="#ffffff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
@@ -52,7 +54,8 @@
 
             <Spinner
                 android:id="@+id/spinner"
-                android:entries="@array/jenis_arr"
+                android:background="#ffffff"
+                android:entries="@array/jenis_newloc"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
@@ -62,6 +65,7 @@
 
             <TextView
                 android:id="@+id/name"
+                android:textColor="#ffffff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
@@ -81,6 +85,7 @@
 
             <TextView
                 android:id="@+id/lat"
+                android:textColor="#ffffff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
@@ -100,6 +105,7 @@
 
             <TextView
                 android:id="@+id/longitude"
+                android:textColor="#ffffff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
@@ -124,9 +130,9 @@
                 android:layout_height="45dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:background="#e7b901"
+                android:background="@drawable/roundedbtn"
                 android:text="Simpan"
-                android:textColor="#ffffff"
+                android:textColor="#000000"
                 android:textSize="20dp"
                 android:textStyle="bold"
                 android:visibility="gone" />

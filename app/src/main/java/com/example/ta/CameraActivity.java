@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -167,6 +168,7 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
                         spinnerName.setVisibility(View.VISIBLE);
                         spinnerLabel.setVisibility(View.VISIBLE);
 
+
                         Longtext.setFocusable(false);
                         Longtext.setEnabled(false);
                         Longtext.setCursorVisible(false);
@@ -289,7 +291,6 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
     }
 
     protected void kirimKeDB(Double lat,Double lng,Integer jenis,String namaData,String base64){
-        Log.i("KIRIM KE DEWI","TEEST");
         SessionManager sessionManager = new SessionManager(this);
         BaseApiService apiService = RetrofitClient.getClient().create(BaseApiService.class);
         Call<StoreResponse> call = apiService.sampleRequest(jenis,lat,lng,namaData,base64,sessionManager.getUser().getRemember_token());

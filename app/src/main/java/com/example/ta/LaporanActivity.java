@@ -168,21 +168,15 @@ public class LaporanActivity extends FragmentActivity implements OnMapReadyCallb
         tvLat = markerLat;
         tvLong = markerLong;
 
-        sendToAPI(namaLapor, tvLat, tvLong, jenisIDLapor);
+        sendToDB(namaLapor, tvLat, tvLong, jenisIDLapor);
     }
 
-    protected void sendToAPI(final String namaLapor, Double tvLat, Double tvLong, String jenisIDLapor) {
+    protected void sendToDB(final String namaLapor, Double tvLat, Double tvLong, String jenisIDLapor) {
         BaseApiService apiService = RetrofitClient.getClient().create(BaseApiService.class);
         Call<LaporanResponse> call = apiService.laporanRequest(namaLapor, tvLat, tvLong, jenisIDLapor);
         call.enqueue(new Callback<LaporanResponse>() {
             @Override
             public void onResponse(Call<LaporanResponse> call, Response<LaporanResponse> response) {
-//                Toast.makeText(LaporanActivity.this, "BERHASIL", Toast.LENGTH_SHORT).show();
-
-//                Toast.makeText(LaporanActivity.this, response.body().getCode() , Toast.LENGTH_SHORT).show();
-//                Intent i = new Intent(LaporanActivity.this, MapActivity.class);
-//                startActivity(i);
-                Log.i("BENER", String.valueOf(response.body().getMessage()));
                 if(response.body().getCode().equals(400)){
                     Toast.makeText(LaporanActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }else if(response.body().getCode().equals(200)){

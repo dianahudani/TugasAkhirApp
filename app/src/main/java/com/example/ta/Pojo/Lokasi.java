@@ -18,6 +18,18 @@ public class Lokasi {
         return longitude_lokasi_penjualan;
     }
 
+    public String getStatus_klasifikasi() {
+        return status_klasifikasi;
+    }
+
+    public String getRank_klasifikasi() {
+        return rank_klasifikasi;
+    }
+
+    public String getScore_klasifikasi() {
+        return score_klasifikasi;
+    }
+
     public String getNama_lokasi_penjualan() {
         return nama_lokasi_penjualan;
     }
@@ -42,19 +54,18 @@ public class Lokasi {
         return updated_at;
     }
 
-    public String status_sample() {
-        return status_sample;
-    }
 
     private String id_lokasi_penjualan;
     private String id_jenis_sample;
     private Double latitude_lokasi_penjualan;
     private Double longitude_lokasi_penjualan;
+    private String status_klasifikasi;
+    private String rank_klasifikasi;
+    private String score_klasifikasi;
     private String nama_lokasi_penjualan;
     private String tanggal_pengambilan_sample;
     private String flag_lokasi_penjualan;
     private String foto_lokasi_penjualan;
-    private String status_sample;
     private String created_at;
     private String updated_at;
 }

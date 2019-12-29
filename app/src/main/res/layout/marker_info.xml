@@ -48,6 +48,22 @@
                 android:paddingLeft="8dp"
                 android:text="Single"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/infoRank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:text="Single"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/infoScore"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:text="Single"
+                android:textStyle="bold" />
         </LinearLayout>
 
     </LinearLayout>

@@ -8,6 +8,11 @@
         <item>Bakso</item>
     </string-array>
 
+    <string-array name="jenis_newloc">
+        <item>Tahu</item>
+        <item>Bakso</item>
+    </string-array>
+
     <string-array name="jenis_laporan">
         <item>Cek Penjualan Bakso/Tahu Lokasi Ini</item>
         <item>Lokasi Ini Sudah Tutup</item>

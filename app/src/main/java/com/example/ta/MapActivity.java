@@ -280,7 +280,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mapForMarker.clear();
         tipeData = findViewById(R.id.spinner);
 
-
         for (int i=0 ; i<lokasiList.size() ; i++){
             LatLng myPosition = new LatLng(lokasiList.get(i).getLatitude_lokasi_penjualan(), lokasiList.get(i).getLongitude_lokasi_penjualan());
             if(tipeData.getSelectedItem().toString().equals("Bakso")) {
