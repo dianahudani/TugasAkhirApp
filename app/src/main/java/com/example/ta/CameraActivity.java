@@ -303,7 +303,7 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
                 Log.i("STATUS POST", response.body().getCode().toString());
                 if(response.body().getCode().equals(200)) {
                     Toast.makeText(CameraActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.i("200 kok", response.body().getCode().toString());
+                    CameraActivity.this.finish();
                 }
                 else{
                     Toast.makeText(CameraActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
