@@ -301,9 +301,14 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
             @Override
             public void onResponse(Call<StoreResponse> call, Response<StoreResponse> response) {
                 Log.i("STATUS POST", response.body().getCode().toString());
+                if(response.body().getCode().equals(200)) {
+                    Toast.makeText(CameraActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.i("200 kok", response.body().getCode().toString());
+                }
+                else{
+                    Toast.makeText(CameraActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                }
                 dialog.dismiss();
-                Toast.makeText(CameraActivity.this, "BERHASIL", Toast.LENGTH_SHORT).show();
-                finish();
             }
 
             @Override
@@ -326,6 +331,5 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
         System.out.println("byte array:"+image);
 
         return img_str = "data:image/jpeg;base64," + Base64.encodeToString(image, 0);
-//        System.out.println("string:"+img_str);
     }
 }
