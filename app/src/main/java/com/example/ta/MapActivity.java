@@ -291,45 +291,98 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             LatLng myPosition = new LatLng(lokasiList.get(i).getLatitude_lokasi_penjualan(), lokasiList.get(i).getLongitude_lokasi_penjualan());
             if(tipeData.getSelectedItem().toString().equals("Bakso")) {
                 if (lokasiList.get(i).getId_jenis_sample().equals("1")) {
-                    Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-                    newMarker.setTag(lokasiList.get(i));
-                    MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
-                    mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                    if(lokasiList.get(i).getStatus_klasifikasi().equals("Terindikasi ada boraks")) {
+                        Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                        newMarker.setTag(lokasiList.get(i));
+                        MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                        mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                    }
+                    else if(lokasiList.get(i).getStatus_klasifikasi().equals("Tidak terindikasi ada boraks")){
+                        Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                        newMarker.setTag(lokasiList.get(i));
+                        MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                        mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                    }
+                    else{
+                        Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        newMarker.setTag(lokasiList.get(i));
+                        MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                        mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                    }
                 }
             }
-            else if(tipeData.getSelectedItem().toString().equals("Semua Jenis Sampel")){
-                    Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-                    newMarker.setTag(lokasiList.get(i));
-                    MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
-                    mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+            else if(tipeData.getSelectedItem().toString().equals("Semua Jenis Sampel")) {
+                if (lokasiList.get(i).getId_jenis_sample().equals("1")) {
+                    if (lokasiList.get(i).getStatus_klasifikasi().equals("Terindikasi ada boraks")) {
+                        Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                        newMarker.setTag(lokasiList.get(i));
+                        MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                        mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                    } else if (lokasiList.get(i).getStatus_klasifikasi().equals("Tidak terindikasi ada boraks")) {
+                        Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                        newMarker.setTag(lokasiList.get(i));
+                        MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                        mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                    } else {
+                        Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        newMarker.setTag(lokasiList.get(i));
+                        MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                        mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                    }
+                }
             }
+
+                else if (lokasiList.get(i).getId_jenis_sample().equals("2")) {
+                    if(lokasiList.get(i).getStatus_klasifikasi().equals("Terindikasi ada formalin")) {
+                        Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                        newMarker.setTag(lokasiList.get(i));
+                        MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                        mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                    }
+                    else if(lokasiList.get(i).getStatus_klasifikasi().equals("Tidak terindikasi ada formalin")){
+                        Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                        newMarker.setTag(lokasiList.get(i));
+                        MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                        mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                    }
+                    else{
+                        Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        newMarker.setTag(lokasiList.get(i));
+                        MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                        mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                    }
+                }
+
+
             else if(tipeData.getSelectedItem().toString().equals("Tahu")) {
                 if (lokasiList.get(i).getId_jenis_sample().equals("2")) {
-                    Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-                    newMarker.setTag(lokasiList.get(i));
-                    MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
-                    mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                    if(lokasiList.get(i).getStatus_klasifikasi().equals("Terindikasi ada formalin")) {
+                        Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                        newMarker.setTag(lokasiList.get(i));
+                        MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                        mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                    }
+                    else if(lokasiList.get(i).getStatus_klasifikasi().equals("Tidak terindikasi ada formalin")){
+                        Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                        newMarker.setTag(lokasiList.get(i));
+                        MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                        mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                    }
+                    else{
+                        Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        newMarker.setTag(lokasiList.get(i));
+                        MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                        mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                    }
                 }
-
             }
-
-
         }
-
-        mapForMarker.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Log.i("TEST MARKER", marker.getTitle().toString());
-                return false;
-            }
-        });
 
     }
 
-
-
-
-
 }
+
+
+
 
 

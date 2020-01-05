@@ -110,7 +110,7 @@ public class LaporanActivity extends FragmentActivity implements OnMapReadyCallb
             Double getLong = alamat.getLongitude();
             Double getLat = alamat.getLatitude();
             Toast.makeText(this,"Move to "+ namaAlamat +" Lat:" + getLat + " Long:" +getLong,Toast.LENGTH_LONG).show();
-            gotoPeta(getLong,getLat,15);
+            gotoPeta(getLong,getLat,20);
         }
         else{
             Toast.makeText(LaporanActivity.this, "Lokasi tidak ditemukan", Toast.LENGTH_SHORT).show();
