@@ -96,17 +96,24 @@ public class LaporanActivity extends FragmentActivity implements OnMapReadyCallb
 
     private void performSearch() {
         search = findViewById(R.id.searchBox);
+        String searchText = search.getText().toString();
         Geocoder g = new Geocoder(getBaseContext());
+        List<android.location.Address> daftar = null;
         try {
-            List<Address> daftar = g.getFromLocationName(search.getText().toString(),1);
+            daftar = g.getFromLocationName(search.getText().toString(),1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(daftar.size() > 0 && searchText!=null) {
             Address alamat = daftar.get(0);
             String namaAlamat = alamat.getAddressLine(0);
             Double getLong = alamat.getLongitude();
             Double getLat = alamat.getLatitude();
             Toast.makeText(this,"Move to "+ namaAlamat +" Lat:" + getLat + " Long:" +getLong,Toast.LENGTH_LONG).show();
             gotoPeta(getLong,getLat,15);
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        else{
+            Toast.makeText(LaporanActivity.this, "Lokasi tidak ditemukan", Toast.LENGTH_SHORT).show();
         }
     }
 

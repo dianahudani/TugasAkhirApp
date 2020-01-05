@@ -301,19 +301,12 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
             @Override
             public void onResponse(Call<StoreResponse> call, Response<StoreResponse> response) {
                 Log.i("STATUS POST", response.body().getCode().toString());
-<<<<<<< HEAD
+
                 if(response.body().getCode().equals(200)) {
-                    Toast.makeText(CameraActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     CameraActivity.this.finish();
                 }
-                else{
-                    Toast.makeText(CameraActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                }
-=======
->>>>>>> parent of c70564c... handler lokasi penjualan
                 dialog.dismiss();
-                Toast.makeText(CameraActivity.this, "BERHASIL", Toast.LENGTH_SHORT).show();
-                finish();
+                Toast.makeText(CameraActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override

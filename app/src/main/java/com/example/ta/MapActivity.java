@@ -205,22 +205,29 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     }
 
-    private void performSearch(){
-        search = findViewById(R.id.searchBox);
-        Geocoder g = new Geocoder(getBaseContext());
-        try {
-            List<android.location.Address> daftar = g.getFromLocationName(search.getText().toString(),1);
-            Address alamat = daftar.get(0);
-            String namaAlamat = alamat.getAddressLine(0);
-            Double getLong = alamat.getLongitude();
-            Double getLat = alamat.getLatitude();
-            Toast.makeText(this,"Move to "+ namaAlamat +" Lat:" + getLat + " Long:" +getLong,Toast.LENGTH_LONG).show();
-            gotoPeta(getLong,getLat,15);
-        } catch (IOException e) {
-            e.printStackTrace();
+        private void performSearch(){
+            search = findViewById(R.id.searchBox);
+            String searchText = search.getText().toString();
+            Geocoder g = new Geocoder(getBaseContext());
+            List<android.location.Address> daftar = null;
+            try {
+                daftar = g.getFromLocationName(search.getText().toString(),1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(daftar.size() > 0 && searchText!=null) {
+                Address alamat = daftar.get(0);
+                String namaAlamat = alamat.getAddressLine(0);
+                Double getLong = alamat.getLongitude();
+                Double getLat = alamat.getLatitude();
+                Toast.makeText(this,"Move to "+ namaAlamat +" Lat:" + getLat + " Long:" +getLong,Toast.LENGTH_LONG).show();
+                gotoPeta(getLong,getLat,15);
+            }
+            else{
+                Toast.makeText(MapActivity.this, "Lokasi tidak ditemukan", Toast.LENGTH_SHORT).show();
+            }
         }
 
-    }
 
 
     private void gotoPeta(Double getLong, Double getLat, int zoom) {

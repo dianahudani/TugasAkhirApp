@@ -22,4 +22,6 @@ public class Laporan {
     Double longitude_lokasi_penjualan;
     String isi_laporan;
 
+
+
 }
