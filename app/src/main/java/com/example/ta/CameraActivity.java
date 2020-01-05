@@ -113,6 +113,9 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
         geobtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog = new ProgressDialog(CameraActivity.this);
+                dialog.setMessage("Loading..");
+                dialog.show();
                 getFromUi();
 //                Intent i = new Intent(CameraActivity.this, GeoActivity.class);
 //                i.putExtra("lat", Lattext.getText().toString());
@@ -298,6 +301,7 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
             @Override
             public void onResponse(Call<StoreResponse> call, Response<StoreResponse> response) {
                 Log.i("STATUS POST", response.body().getCode().toString());
+                dialog.dismiss();
                 Toast.makeText(CameraActivity.this, "BERHASIL", Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -305,6 +309,7 @@ public class CameraActivity extends AppCompatActivity implements LocationListene
             @Override
             public void onFailure(Call<StoreResponse> call, Throwable t) {
                 Log.i("STATUS POST", t.getMessage());
+                dialog.dismiss();
                 Toast.makeText(CameraActivity.this, t.getMessage().toString(), Toast.LENGTH_SHORT).show();
 
             }
