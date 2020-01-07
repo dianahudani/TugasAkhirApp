@@ -329,6 +329,24 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                         MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
                         mapForMarker.setInfoWindowAdapter(mapItemAdapter);
                     }
+                } else if (lokasiList.get(i).getId_jenis_sample().equals("2")) {
+                    if (lokasiList.get(i).getStatus_klasifikasi().equals("Terindikasi ada formalin")) {
+                        Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                        newMarker.setTag(lokasiList.get(i));
+                        MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                        mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                    } else if (lokasiList.get(i).getStatus_klasifikasi().equals("Tidak terindikasi ada formalin")) {
+                        Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                        newMarker.setTag(lokasiList.get(i));
+                        MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                        mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                    } else {
+                        Marker newMarker = mapForMarker.addMarker(new MarkerOptions().position(myPosition).title(lokasiList.get(i).getNama_lokasi_penjualan()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        newMarker.setTag(lokasiList.get(i));
+                        MapItemAdapter mapItemAdapter = new MapItemAdapter(this, lokasiList.get(i));
+                        mapForMarker.setInfoWindowAdapter(mapItemAdapter);
+                    }
+
                 }
             }
 
